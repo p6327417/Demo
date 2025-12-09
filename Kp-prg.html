@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KP Astrology</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 50%, #8b0000 100%);
+            padding: 10px;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+            }
+            
+            .container {
+                border-radius: 4px;
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #8b0000 0%, #c92a2a 50%, #ff6b6b 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 15px 10px;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+            }
+        }
+
+        .nav {
+            display: flex;
+            background: linear-gradient(135deg, #a61c1c 0%, #d63031 100%);
+            border-bottom: 2px solid #8b0000;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 15px 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        @media (max-width: 480px) {
+            .nav {
+                flex-direction: column;
+            }
+            
+            .nav-btn {
+                width: 100%;
+                padding: 12px;
+                font-size: 15px;
+                border-bottom: 1px solid #8b0000;
+            }
+            
+            .nav-btn:last-child {
+                border-bottom: none;
+            }
+        }
+
+        .nav-btn:hover {
+            background-color: #8b0000;
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8787 100%);
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content {
+                padding: 15px;
+            }
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        @media (max-width: 480px) {
+            input[type="text"],
+            textarea {
+                font-size: 16px;
+            }
+            
+            textarea {
+                min-height: 80px;
+            }
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: #1abc9c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #16a085;
+        }
+
+        .btn-secondary {
+            background-color: #3498db;
+        }
+
+        .btn-secondary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+
+        .message {
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-box input {
+            flex: 1;
+            min-width: 0;
+        }
+
+        @media (max-width: 480px) {
+            .search-box {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .search-box input {
+                width: 100%;
+            }
+            
+            .search-box .btn {
+                width: 100%;
+            }
+        }
+
+        .results-list {
+            margin-top: 20px;
+        }
+
+        .result-item {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            background-color: #fafafa;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .result-item h3 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 16px;
+            word-wrap: break-word;
+        }
+
+        .result-item p {
+            color: #555;
+            margin-bottom: 10px;
+            word-wrap: break-word;
+        }
+
+        @media (max-width: 480px) {
+            .result-item {
+                padding: 12px;
+            }
+            
+            .result-item h3 {
+                font-size: 15px;
+            }
+            
+            .result-item p {
+                font-size: 14px;
+            }
+        }
+
+        .edit-form {
+            display: none;
+            padding: 20px;
+            background-color: #ecf0f1;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+
+        .edit-form.active {
+            display: block;
+        }
+
+        .edit-form .btn {
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 480px) {
+            .edit-form {
+                padding: 15px;
+            }
+            
+            .edit-form .btn {
+                width: 100%;
+                margin-right: 0;
+            }
+        }
+
+        .no-results {
+            text-align: center;
+            color: #7f8c8d;
+            padding: 40px;
+            display: none;
+        }
+
+        .no-results.show {
+            display: block;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #8b0000 0%, #c92a2a 50%, #ff6b6b 100%);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 480px) {
+            .footer {
+                padding: 12px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>KP Astrology</h1>
+        </div>
+
+        <div class="nav">
+            <button class="nav-btn active" onclick="showSection('enter', this)">Enter Data</button>
+            <button class="nav-btn" onclick="showSection('edit', this)">Edit Data</button>
+            <button class="nav-btn" onclick="showSection('retrieve', this)">Retrieve Data</button>
+        </div>
+
+        <div class="content">
+            <!-- Enter Data Section -->
+            <div id="enter-section" class="section active">
+                <h2>Enter New Record</h2>
+                <div id="enter-message" class="message"></div>
+                
+                <form id="enter-form" onsubmit="saveRecord(event)">
+                    <div class="form-group">
+                        <label for="enter-question">Question:</label>
+                        <textarea id="enter-question" placeholder="Enter your question here..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="enter-answer">Answer:</label>
+                        <textarea id="enter-answer" placeholder="Enter your answer here..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn">Save</button>
+                </form>
+            </div>
+
+            <!-- Edit Data Section -->
+            <div id="edit-section" class="section">
+                <h2>Edit Records</h2>
+                <div id="edit-message" class="message"></div>
+                
+                <div class="search-box">
+                    <input type="text" id="edit-search" placeholder="Search by keyword in question...">
+                    <button class="btn btn-secondary" type="button" onclick="searchForEdit()">Search</button>
+                    <button class="btn btn-secondary" type="button" onclick="showAllEdit()">Show All</button>
+                    <button class="btn" type="button" onclick="document.getElementById('csv-upload-input').click()">Bulk Upload CSV</button>
+                </div>
+
+                <!-- Hidden file input for CSV upload -->
+                <input type="file" id="csv-upload-input" accept=".csv,text/csv" style="display:none" onchange="handleCsvFile(this.files[0]); this.value='';">
+
+                <div id="edit-results" class="results-list"></div>
+                <div id="edit-no-results" class="no-results">No matching records found.</div>
+
+                <div id="edit-form-container" class="edit-form">
+                    <h3>Edit Record</h3>
+                    <input type="hidden" id="edit-record-id">
+                    
+                    <div class="form-group">
+                        <label for="edit-question">Question:</label>
+                        <textarea id="edit-question"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-answer">Answer:</label>
+                        <textarea id="edit-answer"></textarea>
+                    </div>
+                    
+                    <button class="btn" type="button" onclick="updateRecord()">Save Changes</button>
+                    <button class="btn btn-secondary" type="button" onclick="cancelEdit()">Cancel</button>
+                </div>
+            </div>
+
+            <!-- Retrieve Data Section -->
+            <div id="retrieve-section" class="section">
+                <h2>Retrieve Records</h2>
+                
+                <div class="search-box">
+                    <input type="text" id="retrieve-search" placeholder="Search by keyword in question...">
+                    <button class="btn btn-secondary" type="button" onclick="searchForRetrieve()">Search</button>
+                    <button class="btn btn-secondary" type="button" onclick="showAllRetrieve()">Show All</button>
+                    <button class="btn" type="button" onclick="downloadCsv()">Download CSV</button>
+                </div>
+
+                <div id="retrieve-results" class="results-list"></div>
+                <div id="retrieve-no-results" class="no-results">No matching records found.</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            Institute of KP Astrology ©️ AmannG
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // DATA STORAGE FUNCTIONS
+        // ========================================
+        
+        function getRecords() {
+            const data = localStorage.getItem('qaRecords');
+            return data ? JSON.parse(data) : [];
+        }
+
+        function saveRecords(records) {
+            localStorage.setItem('qaRecords', JSON.stringify(records));
+        }
+
+        function generateId() {
+            return Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+        }
+
+        // ========================================
+        // NAVIGATION
+        // ========================================
+        
+        function showSection(section, btn) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(section + '-section').classList.add('active');
+            if (btn) {
+                btn.classList.add('active');
+            }
+            
+            clearMessages();
+        }
+
+        function clearMessages() {
+            document.querySelectorAll('.message').forEach(m => {
+                m.style.display = 'none';
+                m.className = 'message';
+            });
+        }
+
+        function showMessage(elementId, message, type) {
+            const msgEl = document.getElementById(elementId);
+            msgEl.textContent = message;
+            msgEl.className = 'message ' + type;
+            msgEl.style.display = 'block';
+            
+            setTimeout(() => {
+                msgEl.style.display = 'none';
+            }, 4000);
+        }
+
+        // ========================================
+        // ENTER DATA SECTION
+        // ========================================
+        
+        function saveRecord(event) {
+            event.preventDefault();
+            
+            const question = document.getElementById('enter-question').value.trim();
+            const answer = document.getElementById('enter-answer').value.trim();
+            
+            if (!question || !answer) {
+                showMessage('enter-message', 'Both question and answer are required.', 'error');
+                return;
+            }
+            
+            const records = getRecords();
+            
+            const newRecord = {
+                id: generateId(),
+                question: question,
+                answer: answer
+            };
+            
+            records.push(newRecord);
+            saveRecords(records);
+            
+            document.getElementById('enter-form').reset();
+            showMessage('enter-message', 'Record saved successfully!', 'success');
+        }
+
+        // ========================================
+        // EDIT DATA SECTION
+        // ========================================
+        
+        function searchForEdit() {
+            const keyword = document.getElementById('edit-search').value.trim().toLowerCase();
+            const records = getRecords();
+            
+            document.getElementById('edit-form-container').classList.remove('active');
+            
+            const matches = records.filter(record => 
+                record.question.toLowerCase().includes(keyword)
+            );
+            
+            const resultsContainer = document.getElementById('edit-results');
+            const noResultsEl = document.getElementById('edit-no-results');
+            
+            if (matches.length === 0) {
+                resultsContainer.innerHTML = '';
+                noResultsEl.classList.add('show');
+                return;
+            }
+            
+            noResultsEl.classList.remove('show');
+            
+            resultsContainer.innerHTML = matches.map(record => `
+                <div class="result-item">
+                    <h3>${escapeHtml(truncate(record.question, 100))}</h3>
+                    <p>${escapeHtml(truncate(record.answer, 80))}</p>
+                    <button class="btn btn-small" type="button" onclick="loadEditForm('${record.id}')">Edit</button>
+                </div>
+            `).join('');
+        }
+
+        function showAllEdit() {
+            document.getElementById('edit-search').value = '';
+            searchForEdit();
+        }
+
+        function loadEditForm(recordId) {
+            const records = getRecords();
+            const record = records.find(r => r.id === recordId);
+            
+            if (!record) return;
+            
+            document.getElementById('edit-record-id').value = record.id;
+            document.getElementById('edit-question').value = record.question;
+            document.getElementById('edit-answer').value = record.answer;
+            
+            document.getElementById('edit-form-container').classList.add('active');
+            document.getElementById('edit-form-container').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function updateRecord() {
+            const recordId = document.getElementById('edit-record-id').value;
+            const question = document.getElementById('edit-question').value.trim();
+            const answer = document.getElementById('edit-answer').value.trim();
+            
+            if (!question || !answer) {
+                showMessage('edit-message', 'Both question and answer are required.', 'error');
+                return;
+            }
+            
+            const records = getRecords();
+            const recordIndex = records.findIndex(r => r.id === recordId);
+            
+            if (recordIndex === -1) return;
+            
+            records[recordIndex].question = question;
+            records[recordIndex].answer = answer;
+            
+            saveRecords(records);
+            document.getElementById('edit-form-container').classList.remove('active');
+            showMessage('edit-message', 'Record updated successfully!', 'success');
+            searchForEdit();
+        }
+
+        function cancelEdit() {
+            document.getElementById('edit-form-container').classList.remove('active');
+        }
+
+        // ========================================
+        // RETRIEVE DATA SECTION
+        // ========================================
+        
+        function searchForRetrieve() {
+            const keyword = document.getElementById('retrieve-search').value.trim().toLowerCase();
+            const records = getRecords();
+            
+            const matches = records.filter(record => 
+                record.question.toLowerCase().includes(keyword)
+            );
+            
+            const resultsContainer = document.getElementById('retrieve-results');
+            const noResultsEl = document.getElementById('retrieve-no-results');
+            
+            if (matches.length === 0) {
+                resultsContainer.innerHTML = '';
+                noResultsEl.classList.add('show');
+                return;
+            }
+            
+            noResultsEl.classList.remove('show');
+            
+            resultsContainer.innerHTML = matches.map(record => `
+                <div class="result-item">
+                    <h3>${escapeHtml(record.question)}</h3>
+                    <p><strong>Answer:</strong> ${escapeHtml(record.answer)}</p>
+                </div>
+            `).join('');
+        }
+
+        function showAllRetrieve() {
+            document.getElementById('retrieve-search').value = '';
+            searchForRetrieve();
+        }
+
+        // ========================================
+        // CSV DOWNLOAD
+        // ========================================
+        
+        function csvEscape(value) {
+            if (value == null) return '';
+            const str = String(value).replace(/"/g, '""');
+            return `"${str}"`;
+        }
+
+        function downloadCsv() {
+            const records = getRecords();
+            
+            if (!records.length) {
+                alert('No records found to download.');
+                return;
+            }
+
+            const header = ['ID', 'Question', 'Answer'];
+            const rows = [header.join(',')];
+
+            records.forEach(record => {
+                const row = [
+                    csvEscape(record.id),
+                    csvEscape(record.question),
+                    csvEscape(record.answer)
+                ];
+                rows.push(row.join(','));
+            });
+
+            const csvContent = rows.join('\r\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+
+            const date = new Date();
+            const yyyy = date.getFullYear();
+            const mm = String(date.getMonth() + 1).padStart(2, '0');
+            const dd = String(date.getDate()).padStart(2, '0');
+            a.download = `kp_records_${yyyy}-${mm}-${dd}.csv`;
+
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // ========================================
+        // CSV UPLOAD (BULK ADD/UPDATE)
+        // ========================================
+
+        function parseCsvRow(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+
+                if (char === '"') {
+                    if (inQuotes && line[i + 1] === '"') {
+                        current += '"';
+                        i++;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current);
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            result.push(current);
+            return result;
+        }
+
+        function handleCsvFile(file) {
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                processCsvText(text);
+            };
+            reader.readAsText(file, 'UTF-8');
+        }
+
+        function processCsvText(text) {
+            const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
+            if (!lines.length) {
+                showMessage('edit-message', 'CSV file is empty.', 'error');
+                return;
+            }
+
+            const records = getRecords();
+            let added = 0;
+            let updated = 0;
+
+            const firstRowCells = parseCsvRow(lines[0]);
+            let hasHeader = firstRowCells.some(c => /question/i.test(c)) || firstRowCells.some(c => /answer/i.test(c));
+
+            let startIndex = hasHeader ? 1 : 0;
+            let idIdx = -1, qIdx = -1, aIdx = -1;
+
+            if (hasHeader) {
+                firstRowCells.forEach((h, i) => {
+                    const hl = h.trim().toLowerCase();
+                    if (hl === 'id') idIdx = i;
+                    else if (hl === 'question') qIdx = i;
+                    else if (hl === 'answer') aIdx = i;
+                });
+            }
+
+            if (!hasHeader) {
+                if (firstRowCells.length === 3) {
+                    idIdx = 0; qIdx = 1; aIdx = 2;
+                } else if (firstRowCells.length === 2) {
+                    idIdx = -1; qIdx = 0; aIdx = 1;
+                }
+            }
+
+            if (qIdx === -1 || aIdx === -1) {
+                showMessage('edit-message', 'CSV must contain Question and Answer columns.', 'error');
+                return;
+            }
+
+            for (let i = startIndex; i < lines.length; i++) {
+                const row = parseCsvRow(lines[i]);
+                if (!row.length) continue;
+
+                const rawId = idIdx >= 0 ? (row[idIdx] || '').trim() : '';
+                const question = (row[qIdx] || '').trim();
+                const answer = (row[aIdx] || '').trim();
+
+                if (!question || !answer) {
+                    continue;
+                }
+
+                if (rawId) {
+                    const idx = records.findIndex(r => r.id === rawId);
+                    if (idx >= 0) {
+                        records[idx].question = question;
+                        records[idx].answer = answer;
+                        updated++;
+                    } else {
+                        records.push({
+                            id: rawId,
+                            question,
+                            answer
+                        });
+                        added++;
+                    }
+                } else {
+                    records.push({
+                        id: generateId(),
+                        question,
+                        answer
+                    });
+                    added++;
+                }
+            }
+
+            saveRecords(records);
+            showMessage('edit-message', `Bulk upload complete: ${added} added, ${updated} updated.`, 'success');
+            searchForEdit();
+        }
+
+        // ========================================
+        // UTILITY FUNCTIONS
+        // ========================================
+        
+        function truncate(text, maxLength) {
+            if (!text) return '';
+            if (text.length <= maxLength) return text;
+            return text.substring(0, maxLength) + '...';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('edit-search').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    searchForEdit();
+                }
+            });
+            
+            document.getElementById('retrieve-search').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    searchForRetrieve();
+                }
+            });
+
+            // Prepare "all records" list for retrieve tab
+            showAllRetrieve();
+        });
+    </script>
+</body>
+</html>
